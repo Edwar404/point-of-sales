@@ -117,9 +117,16 @@ if (empty($_SESSION['click_count'])) {
                 newRow += "<td><select class='form-control category-select' name='id_kategori[]' required>";
                 newRow += "<option value=''>--Pilih Kategori--</option>"
                 <?php foreach ($categories as $category) { ?>
-                    newRow += "<option value='<?php echo $category['id']?>'><?php echo $category['nama_kategori']?></option>";
+                    newRow += "<option value='<?php echo $category['id'] ?>'><?php echo $category['nama_kategori'] ?></option>";
                 <?php } ?>
                 newRow += "</select></td>";
+                newRow += "<td><select class='form-control item-select' name='id_barang[]' required>";
+                newRow += "<option value=''>--Pilih Barang--</option>"
+                
+                newRow += "</select></td>";
+                newRow += "<td><input type='number' name='jumlah[]' class='form-control jumlah-input' value='0' required></td>"
+                newRow += "<td></td>"
+                newRow += "<td></td>"
                 newRow += "</tr>";
                 tbody.insertAdjacentHTML('beforeend', newRow)
             })
