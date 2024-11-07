@@ -122,14 +122,39 @@ if (empty($_SESSION['click_count'])) {
                 newRow += "</select></td>";
                 newRow += "<td><select class='form-control item-select' name='id_barang[]' required>";
                 newRow += "<option value=''>--Pilih Barang--</option>"
-                
+
                 newRow += "</select></td>";
                 newRow += "<td><input type='number' name='jumlah[]' class='form-control jumlah-input' value='0' required></td>"
-                newRow += "<td></td>"
-                newRow += "<td></td>"
+                newRow += "<td><input type='number' name='sisa_produk[]' class='form-control' readonly></td>"
+                newRow += "<td><input type='number' name='harga[]' class='form-control' readonly></td>"
                 newRow += "</tr>";
-                tbody.insertAdjacentHTML('beforeend', newRow)
-            })
+                tbody.insertAdjacentHTML('beforeend', newRow);
+
+                attachCategoryChangeListener();
+            });
+
+            function attachCategoryChangeListener() {
+                const categorySelects = document.querySelectorAll('.category-select');
+                categorySelects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        const categoryId = this.value;
+                        const itemSelect = this.closest('tr').querySelector('.item-select');
+
+                        if (categoryId) {
+                            fetch(`controller/get-product-dari-category.php?id_kategori=${categoryId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    itemSelect.innerHTML += "<option value=''>--Pilih Barang--</option>";
+                                    data.forEach(item => {
+                                        itemSelect.innerHTML += `<option value='${item.id}'>${item.nama_barang}</option>`;
+                                    });
+                                });
+                        } else {
+                            itemSelect.innerHTML = "<option value=''>--Pilih Barang--</option>";
+                        }
+                    });
+                })
+            }
         })
     </script>
 </body>
