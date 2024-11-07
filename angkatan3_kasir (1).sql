@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 02:23 PM
+-- Generation Time: Nov 07, 2024 at 02:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id`, `id_kategori`, `nama_barang`, `satuan`, `qty`, `harga`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Ciki Zeky', 'karton', 30, 2000, '2024-11-06 09:01:35', '2024-11-06 09:01:35'),
+(1, 1, 'Ciki Zeky', 'karton', 27, 2000, '2024-11-06 09:01:35', '2024-11-07 12:52:48'),
 (2, 2, 'Okky Jelly Drink', 'karton', 20, 3000, '2024-11-06 09:01:35', '2024-11-06 09:01:35');
 
 -- --------------------------------------------------------
@@ -65,6 +65,13 @@ CREATE TABLE `detail_penjualan` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detail_penjualan`
+--
+
+INSERT INTO `detail_penjualan` (`id`, `id_penjualan`, `id_barang`, `jumlah`, `qty`, `harga`, `total_harga`, `nominal_bayar`, `kembalian`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 3, 30, 2000.00, 6000.00, 10000.00, 4000.00, '2024-11-07 12:52:48', '2024-11-07 12:52:48');
 
 -- --------------------------------------------------------
 
@@ -101,6 +108,14 @@ CREATE TABLE `penjualan` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `penjualan`
+--
+
+INSERT INTO `penjualan` (`id`, `id_user`, `kode_transaksi`, `tanggal_transaksi`, `created_at`, `updated_at`) VALUES
+(1, 1, 'TR-241107193338', '2024-11-07', '2024-11-07 12:34:06', '2024-11-07 12:34:06'),
+(2, 1, 'TR-241107195237', '2024-11-07', '2024-11-07 12:52:48', '2024-11-07 12:52:48');
 
 -- --------------------------------------------------------
 
@@ -191,13 +206,13 @@ ALTER TABLE `usercoba`
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `kategori_barang`
@@ -209,7 +224,7 @@ ALTER TABLE `kategori_barang`
 -- AUTO_INCREMENT for table `penjualan`
 --
 ALTER TABLE `penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
