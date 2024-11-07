@@ -39,7 +39,7 @@ if (empty($_SESSION['click_count'])) {
         <div class="row mt-4">
             <div class="col-1"></div>
             <div class="col-10">
-                <form action="" method="POST">
+                <form action="controller/transaksi-store.php" method="POST">
                     <div class="mb-2">
                         <label class="form-label" for="">Kode Transaksi</label>
                         <input type="text" id="kode_transaksi" value="<?php echo 'TR-' . generateTransactionCode() ?>" name="kode_transaksi" class="form-control w-50" readonly>
@@ -131,8 +131,10 @@ if (empty($_SESSION['click_count'])) {
                 tbody.insertAdjacentHTML('beforeend', newRow);
 
                 attachCategoryChangeListener();
+                attachItemChangeListener();
+                attachJumlahChangeListener();
             });
-
+            // FUNGSI UNTUK MENAMPILKAN BARANG BERDASARKAN KATEGORI
             function attachCategoryChangeListener() {
                 const categorySelects = document.querySelectorAll('.category-select');
                 categorySelects.forEach(select => {
@@ -155,6 +157,96 @@ if (empty($_SESSION['click_count'])) {
                     });
                 })
             }
+
+            // UNTUK MENAMPILKAN QUANTITY DAN HARGA
+            function attachItemChangeListener() {
+                const itemSelects = document.querySelectorAll('.item-select');
+                itemSelects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        const itemId = this.value;
+                        const row = this.closest('tr');
+                        const sisaProdukInput = row.querySelector('input[name="sisa_produk[]"]');
+                        const hargaInput = row.querySelector('input[name="harga[]"]');
+
+                        if (itemId) {
+                            fetch('controller/get-barang-details.php?id_barang=' + itemId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    sisaProdukInput.value = data.qty;
+                                    hargaInput.value = data.harga;
+                                })
+                        } else {
+                            sisaProdukInput.value = '';
+                            hargaInput.value = '';
+                        }
+                    });
+                });
+            }
+
+            const totalHargaKeseluruhan = document.getElementById('total_harga_keseluruhan');
+            const nominalBayarKeseluruhanInput = document.getElementById('nominal_bayar_keseluruhan');
+            const kembalianKeseluruhanInput = document.getElementById('kembalian_keseluruhan');
+
+            // FUNGSI MEMBUAT ALERT KETIKA JUMLAH > SISA PRODUK
+            function attachJumlahChangeListener() {
+                const jumlahInputs = document.querySelectorAll('.jumlah-input');
+                jumlahInputs.forEach(input => {
+                    input.addEventListener('input', function() {
+                        const row = this.closest('tr');
+                        const sisaProdukInput = row.querySelector('input[name="sisa_produk[]"]');
+                        const hargaInput = row.querySelector('input[name="harga[]"]');
+                        const totalHargaInput = document.getElementById('total_harga_keseluruhan');
+                        const nominalBayarInput = document.getElementById('nominal_bayar_keseluruhan');
+                        const kembalianInput = document.getElementById('kembalian_keseluruhan');
+
+                        const jumlah = parseInt(this.value) || 0;
+                        const sisaProduk = parseInt(sisaProdukInput.value) || 0;
+                        const harga = parseFloat(hargaInput.value) || 0;
+
+                        if (jumlah > sisaProduk) {
+                            alert("JUMLAH TIDAK BOLEH MELEBIHI SISA PRODUK");
+                            this.value = sisaProduk;
+                            return;
+                        } else if (jumlah == -1) {
+                            alert("JUMLAH TIDAK BOLEH MINUS");
+                            this.value = sisaProduk;
+                            return;
+                        }
+                        updateTotalKeseluruhan()
+                    });
+                });
+            }
+
+            function updateTotalKeseluruhan() {
+                let totalKeseluruhan = 0;
+                const jumlahInput = document.querySelectorAll('.jumlah-input');
+                jumlahInput.forEach(input => {
+                    const row = input.closest('tr');
+                    const hargaInput = row.querySelector('input[name="harga[]"]');
+                    const harga = parseFloat(hargaInput.value) || 0;
+                    const jumlah = parseInt(input.value) || 0;
+                    totalKeseluruhan += jumlah * harga;
+                });
+                totalHargaKeseluruhan.value = totalKeseluruhan
+            }
+
+            // UNTUK KEMBALIAN
+            nominalBayarKeseluruhanInput.addEventListener('input', function() {
+                const nominalBayar = parseFloat(this.value) || 0;
+                const totalHarga = parseFloat(totalHargaKeseluruhan.value) || 0;
+                kembalianKeseluruhanInput.value = nominalBayar - totalHarga;
+            })
+
+
+            // // FUNGSI UNTUK MENGHITUNG TOTAL HARGA, NOMINAL BAYAR, DAN KEMBALIAN
+            // function calculateTotal() {
+            //     let totalHarga = 0;
+            //     const rows = document.querySelectorAll('tbody tr');
+            //     rows.forEach(row => {
+            //         const jumlahInput = row.querySelector('input[name="jumlah[]"]');
+            //         const hargaInput = row.querySelector('input[name="harga[]"]');
+            //         const sisaProdukInput = row.querySelector('input[name="sisa_produk[]"]');
+
         });
     </script>
 </body>
