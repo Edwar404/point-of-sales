@@ -144,7 +144,7 @@ if (empty($_SESSION['click_count'])) {
                             fetch(`controller/get-product-dari-category.php?id_kategori=${categoryId}`)
                                 .then(response => response.json())
                                 .then(data => {
-                                    itemSelect.innerHTML += "<option value=''>--Pilih Barang--</option>";
+                                    itemSelect.innerHTML = "<option value=''>--Pilih Barang--</option>";
                                     data.forEach(item => {
                                         itemSelect.innerHTML += `<option value='${item.id}'>${item.nama_barang}</option>`;
                                     });
@@ -155,7 +155,7 @@ if (empty($_SESSION['click_count'])) {
                     });
                 })
             }
-        })
+        });
     </script>
 </body>
 
