@@ -50,7 +50,7 @@ if (empty($_SESSION['click_count'])) {
                     </div>
                     <div class="my-4">
                         <button class="btn btn-primary btn-sm" type="button" id="counterBtn">Tambah</button>
-                        <input type="number" style="width: 465px;" name="countDisplay" value="<?php echo $_SESSION['click_count'] ?>" id="countDisplay" readonly>
+                        <!-- <input type="number" style="width: 465px;" name="countDisplay" value="<?php echo $_SESSION['click_count'] ?>" id="countDisplay" readonly> -->
                     </div>
                     <div class="table table-responsive">
                         <table class="table table-bordered">
@@ -59,9 +59,10 @@ if (empty($_SESSION['click_count'])) {
                                     <th>No.</th>
                                     <th>Nama Kategori</th>
                                     <th>Nama Barang</th>
-                                    <th>jumlah</th>
+                                    <th>Qty</th>
                                     <th>Sisa Produk</th>
                                     <th>Harga</th>
+                                    <th>Sub Total</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody">
@@ -70,15 +71,15 @@ if (empty($_SESSION['click_count'])) {
                             </tbody>
                             <tfoot class="text-center">
                                 <tr>
-                                    <th colspan="5">Total Harga</th>
+                                    <th colspan="6">Total Harga</th>
                                     <td><input type="number" id="total_harga_keseluruhan" name="total_harga" class="form-control" readonly></td>
                                 </tr>
                                 <tr>
-                                    <th colspan="5">Nominal Bayar</th>
+                                    <th colspan="6">Nominal Bayar</th>
                                     <td><input type="number" id="nominal_bayar_keseluruhan" name="nominal_bayar" class="form-control" required></td>
                                 </tr>
                                 <tr>
-                                    <th colspan="5">Kembalian</th>
+                                    <th colspan="6">Kembalian</th>
                                     <td><input type="number" id="kembalian_keseluruhan" name="kembalian" class="form-control" readonly></td>
                                 </tr>
                             </tfoot>
@@ -106,14 +107,17 @@ if (empty($_SESSION['click_count'])) {
             const button = document.getElementById('counterBtn');
             const countDisplay = document.getElementById('countDisplay');
             const tbody = document.getElementById('tbody');
+            const table = document.getElementById('table')
+            let no = 0;
 
             button.addEventListener('click', function() {
-                let currentCount = parseInt(countDisplay.value) || 0;
-                currentCount++;
-                countDisplay.value = currentCount;
+                no++;
+                // let currentCount = parseInt(countDisplay.value) || 0;
+                // currentCount++;
+                // countDisplay.value = currentCount;
                 // FUNGSI TAMBAH TD
                 let newRow = "<tr>";
-                newRow += "<td>" + currentCount + "</td>";
+                newRow += "<td>" + no + "</td>";
                 newRow += "<td><select class='form-control category-select' name='id_kategori[]' required>";
                 newRow += "<option value=''>--Pilih Kategori--</option>"
                 <?php foreach ($categories as $category) { ?>
@@ -127,12 +131,22 @@ if (empty($_SESSION['click_count'])) {
                 newRow += "<td><input type='number' name='jumlah[]' class='form-control jumlah-input' value='0' required></td>"
                 newRow += "<td><input type='number' name='sisa_produk[]' class='form-control' readonly></td>"
                 newRow += "<td><input type='number' name='harga[]' class='form-control' readonly></td>"
+                newRow += "<td><input type='number' name='sub_total[]' class='form-control sub_total' readonly></td>"
                 newRow += "</tr>";
                 tbody.insertAdjacentHTML('beforeend', newRow);
 
                 attachCategoryChangeListener();
                 attachItemChangeListener();
                 attachJumlahChangeListener();
+                let totalKeseluruhan = 0;
+                const jumlahInput = document.querySelectorAll('.jumlah-input');
+                jumlahInput.forEach(input => {
+                    const row = input.closest('tr');
+                    const hargaInput = row.querySelector('input[name="harga[]"]');
+                    const harga = parseFloat(hargaInput.value) || 0;
+                    const jumlah = parseInt(input.value) || 0;
+                    totalKeseluruhan += jumlah * harga;
+                });
             });
             // FUNGSI UNTUK MENAMPILKAN BARANG BERDASARKAN KATEGORI
             function attachCategoryChangeListener() {
@@ -184,6 +198,7 @@ if (empty($_SESSION['click_count'])) {
             }
 
             const totalHargaKeseluruhan = document.getElementById('total_harga_keseluruhan');
+            // const subTotal = document.querySelectorAll('.sub_total');
             const nominalBayarKeseluruhanInput = document.getElementById('nominal_bayar_keseluruhan');
             const kembalianKeseluruhanInput = document.getElementById('kembalian_keseluruhan');
 
@@ -207,7 +222,7 @@ if (empty($_SESSION['click_count'])) {
                             alert("JUMLAH TIDAK BOLEH MELEBIHI SISA PRODUK");
                             this.value = sisaProduk;
                             return;
-                        } else if (jumlah == -1) {
+                        } else if (jumlah < 0) {
                             alert("JUMLAH TIDAK BOLEH MINUS");
                             this.value = sisaProduk;
                             return;
@@ -218,6 +233,7 @@ if (empty($_SESSION['click_count'])) {
             }
 
             function updateTotalKeseluruhan() {
+                let total = 0;
                 let totalKeseluruhan = 0;
                 const jumlahInput = document.querySelectorAll('.jumlah-input');
                 jumlahInput.forEach(input => {
@@ -225,9 +241,19 @@ if (empty($_SESSION['click_count'])) {
                     const hargaInput = row.querySelector('input[name="harga[]"]');
                     const harga = parseFloat(hargaInput.value) || 0;
                     const jumlah = parseInt(input.value) || 0;
-                    totalKeseluruhan += jumlah * harga;
+                    // totalKeseluruhan += jumlah * harga;
+                    const subTotal = row.querySelector('.sub_total')
+                    total = jumlah * harga;
+                    subTotal.value = total;
                 });
-                totalHargaKeseluruhan.value = totalKeseluruhan
+
+                const subTotal = document.querySelectorAll('.sub_total');
+                subTotal.forEach(totalItem => {
+                    let subTotal = parseFloat(totalItem.value) || 0;
+                    totalKeseluruhan += subTotal;
+                });
+
+                totalHargaKeseluruhan.value = totalKeseluruhan;
             }
 
             // UNTUK KEMBALIAN

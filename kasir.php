@@ -29,7 +29,7 @@ session_regenerate_id();
                     <div class="card-body mt-3">
                         <div class="table-responsive">
                             <div class="mb-2">
-                                <a href="tambah-transaction.php" class="btn btn-primary btn-sm">Kasir</a>
+                                <a href="tambah-transaction.php" class="btn btn-primary btn-sm">Tambah Transaksi</a>
                             </div>
                             <table class="table table-bordered text-center">
                                 <thead>

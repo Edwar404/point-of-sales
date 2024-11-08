@@ -32,7 +32,7 @@ if (isset($_POST['simpan'])) {
         $updateQty = mysqli_query($koneksi, "UPDATE barang SET qty = qty - $jumlah WHERE id = '$id_barang'");
     }
 
-    header('location: ../kasir.php');
+    header('location: ../print.php?id=' . $id_penjualan);
     exit();
 
     // if ($queryPenjualan) {
