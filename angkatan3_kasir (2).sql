@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2024 at 02:56 PM
+-- Generation Time: Nov 08, 2024 at 01:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,8 +43,8 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id`, `id_kategori`, `nama_barang`, `satuan`, `qty`, `harga`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Ciki Zeky', 'karton', 27, 2000, '2024-11-06 09:01:35', '2024-11-07 12:52:48'),
-(2, 2, 'Okky Jelly Drink', 'karton', 20, 3000, '2024-11-06 09:01:35', '2024-11-06 09:01:35');
+(1, 1, 'Ciki Zeky', 'karton', 10, 2000, '2024-11-06 09:01:35', '2024-11-08 12:54:26'),
+(2, 2, 'Okky Jelly Drink', 'karton', 13, 3000, '2024-11-06 09:01:35', '2024-11-08 12:54:26');
 
 -- --------------------------------------------------------
 
@@ -57,9 +57,9 @@ CREATE TABLE `detail_penjualan` (
   `id_penjualan` int(11) NOT NULL,
   `id_barang` int(11) NOT NULL,
   `jumlah` int(11) NOT NULL,
-  `qty` int(11) NOT NULL,
   `harga` double(10,2) NOT NULL,
   `total_harga` double(10,2) NOT NULL,
+  `sub_total` double(10,2) NOT NULL,
   `nominal_bayar` double(10,2) NOT NULL,
   `kembalian` double(10,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -70,8 +70,18 @@ CREATE TABLE `detail_penjualan` (
 -- Dumping data for table `detail_penjualan`
 --
 
-INSERT INTO `detail_penjualan` (`id`, `id_penjualan`, `id_barang`, `jumlah`, `qty`, `harga`, `total_harga`, `nominal_bayar`, `kembalian`, `created_at`, `updated_at`) VALUES
-(1, 2, 1, 3, 30, 2000.00, 6000.00, 10000.00, 4000.00, '2024-11-07 12:52:48', '2024-11-07 12:52:48');
+INSERT INTO `detail_penjualan` (`id`, `id_penjualan`, `id_barang`, `jumlah`, `harga`, `total_harga`, `sub_total`, `nominal_bayar`, `kembalian`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 3, 2000.00, 6000.00, 0.00, 10000.00, 4000.00, '2024-11-07 12:52:48', '2024-11-07 12:52:48'),
+(2, 3, 1, 8, 2000.00, 16000.00, 0.00, 20000.00, 4000.00, '2024-11-08 06:52:24', '2024-11-08 06:52:24'),
+(3, 4, 1, 1, 2000.00, 2000.00, 0.00, 5000.00, 3000.00, '2024-11-08 12:06:29', '2024-11-08 12:06:29'),
+(4, 5, 1, 2, 2000.00, 10000.00, 0.00, 10000.00, 0.00, '2024-11-08 12:22:41', '2024-11-08 12:22:41'),
+(5, 5, 2, 2, 3000.00, 10000.00, 0.00, 10000.00, 0.00, '2024-11-08 12:22:41', '2024-11-08 12:22:41'),
+(6, 6, 1, 3, 2000.00, 1.00, 6000.00, 20000.00, 8000.00, '2024-11-08 12:47:22', '2024-11-08 12:47:22'),
+(7, 6, 2, 2, 3000.00, 2.00, 6000.00, 20000.00, 8000.00, '2024-11-08 12:47:22', '2024-11-08 12:47:22'),
+(8, 7, 1, 2, 2000.00, 7000.00, 4000.00, 10000.00, 3000.00, '2024-11-08 12:51:30', '2024-11-08 12:51:30'),
+(9, 7, 2, 1, 3000.00, 7000.00, 3000.00, 10000.00, 3000.00, '2024-11-08 12:51:30', '2024-11-08 12:51:30'),
+(10, 8, 1, 1, 2000.00, 8000.00, 2000.00, 10000.00, 2000.00, '2024-11-08 12:54:26', '2024-11-08 12:54:26'),
+(11, 8, 2, 2, 3000.00, 8000.00, 6000.00, 10000.00, 2000.00, '2024-11-08 12:54:26', '2024-11-08 12:54:26');
 
 -- --------------------------------------------------------
 
@@ -115,7 +125,13 @@ CREATE TABLE `penjualan` (
 
 INSERT INTO `penjualan` (`id`, `id_user`, `kode_transaksi`, `tanggal_transaksi`, `created_at`, `updated_at`) VALUES
 (1, 1, 'TR-241107193338', '2024-11-07', '2024-11-07 12:34:06', '2024-11-07 12:34:06'),
-(2, 1, 'TR-241107195237', '2024-11-07', '2024-11-07 12:52:48', '2024-11-07 12:52:48');
+(2, 1, 'TR-241107195237', '2024-11-07', '2024-11-07 12:52:48', '2024-11-07 12:52:48'),
+(3, 1, 'TR-241108135158', '2024-11-08', '2024-11-08 06:52:24', '2024-11-08 06:52:24'),
+(4, 1, 'TR-241108190132', '2024-11-08', '2024-11-08 12:06:29', '2024-11-08 12:06:29'),
+(5, 1, 'TR-241108192103', '2024-11-08', '2024-11-08 12:22:41', '2024-11-08 12:22:41'),
+(6, 1, 'TR-241108194554', '2024-11-08', '2024-11-08 12:47:22', '2024-11-08 12:47:22'),
+(7, 1, 'TR-241108195107', '2024-11-08', '2024-11-08 12:51:30', '2024-11-08 12:51:30'),
+(8, 1, 'TR-241108195406', '2024-11-08', '2024-11-08 12:54:26', '2024-11-08 12:54:26');
 
 -- --------------------------------------------------------
 
@@ -212,7 +228,7 @@ ALTER TABLE `barang`
 -- AUTO_INCREMENT for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `kategori_barang`
@@ -224,7 +240,7 @@ ALTER TABLE `kategori_barang`
 -- AUTO_INCREMENT for table `penjualan`
 --
 ALTER TABLE `penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user`
