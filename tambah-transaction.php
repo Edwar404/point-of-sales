@@ -260,7 +260,20 @@ if (empty($_SESSION['click_count'])) {
             nominalBayarKeseluruhanInput.addEventListener('input', function() {
                 const nominalBayar = parseFloat(this.value) || 0;
                 const totalHarga = parseFloat(totalHargaKeseluruhan.value) || 0;
-                kembalianKeseluruhanInput.value = nominalBayar - totalHarga;
+                // kembalianKeseluruhanInput.value = nominalBayar - totalHarga;
+
+                if (nominalBayar >= totalHarga) {
+                    let kembalian = nominalBayar - totalHarga;
+                    kembalianKeseluruhanInput.value = kembalian;
+                } else if (nominalBayar == 0) {
+                    kembalianKeseluruhanInput.value = 0;
+                }
+                // else if (nominalBayar <= totalHarga) {
+                //     // alert("Nominal Bayar Tidak Boleh Kurang Dari Total Harga");
+                //     this.value = totalHarga;
+                //     kembalianKeseluruhanInput.value = 0;
+                //     return;
+                // }
             })
 
 
